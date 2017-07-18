@@ -7,6 +7,8 @@ import me.zzq.ganker.vo.GanHuo;
 
 /**
  * Created by zzq in 2017/7/18
+ * <p>
+ * Main database in whole app.
  */
 
 @Database(entities = {GanHuo.class}, version = 1)

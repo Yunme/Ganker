@@ -14,6 +14,11 @@ import me.zzq.ganker.vo.Resource;
 
 /**
  * Created by zzq in 2017/7/18
+ * <p>
+ * A generic class that can provide a resource backed by both the database and the network.
+ *
+ * @param <RequestType>
+ * @param <ResultType>
  */
 
 public abstract class NetworkBoundResource<ResultType, RequestType> {

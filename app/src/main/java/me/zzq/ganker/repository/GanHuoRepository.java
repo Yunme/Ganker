@@ -10,6 +10,8 @@ import me.zzq.ganker.util.AppExecutors;
 
 /**
  * Created by zzq in 2017/7/18
+ *
+ * Repository that handles GanHuo instances.
  */
 
 @Singleton
