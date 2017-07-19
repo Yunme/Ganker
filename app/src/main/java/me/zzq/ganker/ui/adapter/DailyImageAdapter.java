@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import javax.inject.Inject;
-
 import me.zzq.ganker.R;
 import me.zzq.ganker.databinding.ItemDailyBinding;
 import me.zzq.ganker.util.Objects;
@@ -23,7 +21,6 @@ public class DailyImageAdapter extends DataBoundListAdapter<GanHuo, ItemDailyBin
 
     private final OnItemClickListener<GanHuo> onItemClickListener;
 
-    @Inject
     public DailyImageAdapter(DataBindingComponent dataBindingComponent, OnItemClickListener<GanHuo> onItemClickListener) {
         this.dataBindingComponent = dataBindingComponent;
         this.onItemClickListener = onItemClickListener;
@@ -48,6 +45,9 @@ public class DailyImageAdapter extends DataBoundListAdapter<GanHuo, ItemDailyBin
     @Override
     protected void bind(ItemDailyBinding binding, GanHuo item) {
         binding.setGanHuo(item);
+        /*Glide.with(binding.getRoot().getContext())
+                .load(item.getUrl())
+                .into(binding.dailyImageView);*/
     }
 
     @Override
