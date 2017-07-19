@@ -14,7 +14,7 @@ import me.zzq.ganker.GankerApplication;
  */
 
 @Singleton
-@Component(modules = {AndroidInjectionModule.class, AppModule.class})
+@Component(modules = {AndroidInjectionModule.class, AppModule.class, MainActivityModule.class})
 public interface AppComponent {
 
     void inject(GankerApplication gankerApplication);

@@ -17,8 +17,8 @@ import me.zzq.ganker.vo.Resource;
  * <p>
  * A generic class that can provide a resource backed by both the database and the network.
  *
- * @param <RequestType>
- * @param <ResultType>
+ * @param <RequestType> the data type of network request.
+ * @param <ResultType>  the data type of result.
  */
 
 public abstract class NetworkBoundResource<ResultType, RequestType> {
@@ -102,14 +102,20 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     protected void onFetchFailed() {
     }
 
+    public LiveData<Resource<ResultType>> asLiveData() {
+        return result;
+    }
+
     @WorkerThread
     protected RequestType processResponse(ApiResponse<RequestType> response) {
         return response.body;
     }
 
+    //data persistence
     @WorkerThread
     protected abstract void saveCallResult(@NonNull RequestType item);
 
+    @MainThread
     protected abstract boolean shouldFetch(@Nullable ResultType data);
 
     @NonNull

@@ -15,6 +15,8 @@ public class GanHuo {
     @SerializedName("_id")
     private String id;
 
+    private String content;
+
     private String createdAt;
 
     private String desc;
@@ -25,11 +27,13 @@ public class GanHuo {
 
     private String type;
 
-    private String url;
+    public String url;
 
     private boolean used;
 
     private String who;
+
+    private String title;
 
 
     public String getId() {
@@ -38,6 +42,14 @@ public class GanHuo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getCreatedAt() {
@@ -104,6 +116,14 @@ public class GanHuo {
         this.who = who;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public String toString() {
         return "GanHuo{" +
@@ -116,6 +136,7 @@ public class GanHuo {
                 ", url='" + url + '\'' +
                 ", used=" + used +
                 ", who='" + who + '\'' +
+                ", title='" + title + '\'' +
                 '}';
     }
 }
