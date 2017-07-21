@@ -2,6 +2,7 @@ package me.zzq.ganker.di;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
+import me.zzq.ganker.ui.DailyDetailFragment;
 import me.zzq.ganker.ui.DailyFragment;
 
 /**
@@ -12,4 +13,7 @@ import me.zzq.ganker.ui.DailyFragment;
 public abstract class FragmentBuildersModule {
     @ContributesAndroidInjector
     abstract DailyFragment contributeDailyFragment();
+
+    @ContributesAndroidInjector
+    abstract DailyDetailFragment contributeDailyDetailFragment();
 }

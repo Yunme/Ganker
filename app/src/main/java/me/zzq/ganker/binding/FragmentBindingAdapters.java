@@ -23,6 +23,6 @@ public class FragmentBindingAdapters {
 
     @BindingAdapter("imageUrl")
     public void bindImage(ImageView imageView, String url) {
-        Glide.with(fragment).load(url).into(imageView);
+        Glide.with(fragment).load("http://pic129.nipic.com/file/20170511/7138165_193428247000_2.jpg").into(imageView);
     }
 }

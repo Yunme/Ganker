@@ -5,12 +5,14 @@ import android.arch.persistence.room.Index;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by zzq in 2017/7/18
  */
 
 @Entity(indices = {@Index("id")}, primaryKeys = {"id"})
-public class GanHuo {
+public class GanHuo implements Serializable{
 
     @SerializedName("_id")
     private String id;
@@ -27,7 +29,7 @@ public class GanHuo {
 
     private String type;
 
-    public String url;
+    private String url;
 
     private boolean used;
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,8 @@ public class DailyFragment extends LifecycleFragment implements Injectable {
 
     private DailyViewModel dailyViewModel;
 
+    private DailyDetailFragment dailyDetailFragment;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,10 +61,24 @@ public class DailyFragment extends LifecycleFragment implements Injectable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         dailyViewModel = ViewModelProviders.of(this, viewModelFactory).get(DailyViewModel.class);
+        dailyDetailFragment = new DailyDetailFragment();
         dailyImageAdapter = new DailyImageAdapter(dataBindingComponent, new OnItemClickListener<GanHuo>() {
             @Override
-            public void onItemClick(int position, GanHuo item) {
+            public void onItemClick(View view, int position, GanHuo item) {
+                Bundle bundle = new Bundle();
+                bundle.putString("transitionName", "transition" + position);
+                bundle.putSerializable("ganHuo", item);
+                dailyDetailFragment.setArguments(bundle);
 
+                DailyFragment.this.setSharedElementReturnTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(R.transition.default_transition));
+                DailyFragment.this.setExitTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(android.R.transition.no_transition));
+
+                dailyDetailFragment.setSharedElementEnterTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(R.transition.default_transition));
+                dailyDetailFragment.setEnterTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(android.R.transition.no_transition));
+                getFragmentManager().beginTransaction().replace(R.id.container, dailyDetailFragment)
+                        .addToBackStack(null)
+                        .addSharedElement(view, "transition" + position)
+                        .commit();
             }
         });
         initRecyclerView();

@@ -25,7 +25,7 @@ public abstract class DataBoundListAdapter<T, V extends ViewDataBinding>
         extends RecyclerView.Adapter<DataBoundViewHolder<V>> {
 
     @Nullable
-    private List<T> items;
+    protected List<T> items;
 
 
     /**
