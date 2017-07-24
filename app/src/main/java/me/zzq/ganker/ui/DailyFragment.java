@@ -23,7 +23,8 @@ import me.zzq.ganker.R;
 import me.zzq.ganker.binding.FragmentDataBindingComponent;
 import me.zzq.ganker.databinding.FragmentDailyBinding;
 import me.zzq.ganker.di.Injectable;
-import me.zzq.ganker.ui.adapter.DailyImageAdapter;
+import me.zzq.ganker.ui.adapter.DailyImageProvider;
+import me.zzq.ganker.ui.adapter.DataBoundListAdapter;
 import me.zzq.ganker.ui.adapter.OnItemClickListener;
 import me.zzq.ganker.util.AutoClearedValue;
 import me.zzq.ganker.vo.GanHuo;
@@ -38,7 +39,7 @@ public class DailyFragment extends LifecycleFragment implements Injectable {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
-    DailyImageAdapter dailyImageAdapter;
+    DataBoundListAdapter dataBoundListAdapter;
 
     DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
 
@@ -62,7 +63,9 @@ public class DailyFragment extends LifecycleFragment implements Injectable {
         super.onActivityCreated(savedInstanceState);
         dailyViewModel = ViewModelProviders.of(this, viewModelFactory).get(DailyViewModel.class);
         dailyDetailFragment = new DailyDetailFragment();
-        dailyImageAdapter = new DailyImageAdapter(dataBindingComponent, new OnItemClickListener<GanHuo>() {
+        dataBoundListAdapter = new DataBoundListAdapter();
+
+        OnItemClickListener onItemClickListener = new OnItemClickListener<GanHuo>() {
             @Override
             public void onItemClick(View view, int position, GanHuo item) {
                 Bundle bundle = new Bundle();
@@ -72,29 +75,34 @@ public class DailyFragment extends LifecycleFragment implements Injectable {
 
                 DailyFragment.this.setSharedElementReturnTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(R.transition.default_transition));
                 DailyFragment.this.setExitTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(android.R.transition.no_transition));
+                DailyFragment.this.setEnterTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(android.R.transition.no_transition));
 
                 dailyDetailFragment.setSharedElementEnterTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(R.transition.default_transition));
                 dailyDetailFragment.setEnterTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(android.R.transition.no_transition));
+                dailyDetailFragment.setExitTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(android.R.transition.no_transition));
                 getFragmentManager().beginTransaction().replace(R.id.container, dailyDetailFragment)
                         .addToBackStack(null)
                         .addSharedElement(view, "transition" + position)
                         .commit();
             }
-        });
+        };
+
+        dataBoundListAdapter.viewDataBinding.put(GanHuo.class, new DailyImageProvider(dataBindingComponent, onItemClickListener));
+
         initRecyclerView();
     }
 
     private void initRecyclerView() {
-        dataBinding.get().recyclerView.setAdapter(dailyImageAdapter);
+        dataBinding.get().recyclerView.setAdapter(dataBoundListAdapter);
         new LinearSnapHelper().attachToRecyclerView(dataBinding.get().recyclerView);
         ((LinearLayoutManager) dataBinding.get().recyclerView.getLayoutManager()).setOrientation(LinearLayoutManager.HORIZONTAL);
         dailyViewModel.getGanHuoList().observe(this, new Observer<Resource<List<GanHuo>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
                 if (listResource == null) {
-                    dailyImageAdapter.replace(null);
+                    dataBoundListAdapter.setItems(null);
                 } else {
-                    dailyImageAdapter.replace(listResource.data);
+                    dataBoundListAdapter.setItems(listResource.data);
                 }
             }
         });

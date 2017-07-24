@@ -1,11 +1,7 @@
 package me.zzq.ganker.ui.adapter;
 
-import android.annotation.SuppressLint;
-import android.databinding.ViewDataBinding;
-import android.os.AsyncTask;
-import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -17,17 +13,15 @@ import java.util.List;
  * <p>
  * A generic RecyclerView Adapter that uses Data Binding & DiffUtil.
  *
- * @param <T> Type of the items in the list.
- * @param <V> Type of the DataBinding.
+ * Support MultiTpe Item. use one-to-one POJO and ViewDataBinding.
  **/
 
-public abstract class DataBoundListAdapter<T, V extends ViewDataBinding>
-        extends RecyclerView.Adapter<DataBoundViewHolder<V>> {
+public class DataBoundListAdapter extends RecyclerView.Adapter<DataBoundViewHolder> {
+
+    public SimpleArrayMap<Class<?>, ItemBindingProvider> viewDataBinding = new SimpleArrayMap<>();
 
     @Nullable
-    protected List<T> items;
-
-
+    private List<?> items;
     /**
      * each time data is set, we update this variable so that if DiffUtil calculation returns
      * after repetitive updates, we can ignore the old calculation.
@@ -35,20 +29,30 @@ public abstract class DataBoundListAdapter<T, V extends ViewDataBinding>
     private int dataVersion = 0;
 
     @Override
-    public DataBoundViewHolder<V> onCreateViewHolder(ViewGroup parent, int viewType) {
-        V binding = createBinding(parent);
-        return new DataBoundViewHolder<>(binding);
+    public DataBoundViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        ItemBindingProvider viewBinding = viewDataBinding.valueAt(viewType);
+        return new DataBoundViewHolder<>(viewBinding.createBinding(parent));
     }
 
-    protected abstract V createBinding(ViewGroup parent);
 
     @Override
-    public void onBindViewHolder(DataBoundViewHolder<V> holder, int position) {
-        bind(holder.binding, items.get(position));
+    public void onBindViewHolder(DataBoundViewHolder holder, int position) {
+        ItemBindingProvider viewBinding = viewDataBinding.valueAt(getItemViewType(position));
+        viewBinding.onBind(holder.binding, items.get(position));
         holder.binding.executePendingBindings();
     }
 
-    @SuppressLint("StaticFieldLeak")
+    @Override
+    public int getItemViewType(int position) {
+        return viewDataBinding.indexOfKey(items.get(position).getClass());
+    }
+
+    public void setItems(@Nullable List<?> items) {
+        this.items = items;
+        notifyDataSetChanged();
+    }
+
+    /* @SuppressLint("StaticFieldLeak")
     @MainThread
     public void replace(final List<T> update) {
         dataVersion++;
@@ -106,13 +110,12 @@ public abstract class DataBoundListAdapter<T, V extends ViewDataBinding>
                 }
             }.execute();
         }
-    }
+    }*/
 
-    protected abstract void bind(V binding, T item);
 
-    protected abstract boolean areItemsTheSame(T oldItem, T newItem);
+  /*  protected abstract boolean areItemsTheSame(T oldItem, T newItem);
 
-    protected abstract boolean areContentsTheSame(T oldItem, T newItem);
+    protected abstract boolean areContentsTheSame(T oldItem, T newItem);*/
 
 
     @Override
