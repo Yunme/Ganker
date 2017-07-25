@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import java.util.List;
 
 import me.zzq.ganker.vo.GanHuo;
+import me.zzq.ganker.vo.GanHuoList;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -18,4 +19,9 @@ public interface GankerService {
 
     @GET("history/content/{count}/{page}")
     LiveData<ApiResponse<HttpResult<List<GanHuo>>>> getGanhuoHeader(@Path("count") int count, @Path("page") int page);
+
+
+    @GET("day/{date}")
+    LiveData<ApiResponse<HttpResult<GanHuoList>>> getGanHuoList(@Path("date") String date);
+
 }

@@ -30,6 +30,7 @@ import me.zzq.ganker.util.AutoClearedValue;
 import me.zzq.ganker.vo.GanHuo;
 import me.zzq.ganker.vo.Resource;
 
+
 /**
  * Created by zzq in 2017/7/17
  */
@@ -69,8 +70,8 @@ public class DailyFragment extends LifecycleFragment implements Injectable {
             @Override
             public void onItemClick(View view, int position, GanHuo item) {
                 Bundle bundle = new Bundle();
-                bundle.putString("transitionName", "transition" + position);
-                bundle.putSerializable("ganHuo", item);
+                bundle.putString(DailyDetailFragment.TRANSITION_NAME, "transition" + position);
+                bundle.putSerializable(DailyDetailFragment.GAN_HUO, item);
                 dailyDetailFragment.setArguments(bundle);
 
                 DailyFragment.this.setSharedElementReturnTransition(TransitionInflater.from(DailyFragment.this.getContext()).inflateTransition(R.transition.default_transition));

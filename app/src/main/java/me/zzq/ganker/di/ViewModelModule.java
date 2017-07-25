@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
+import me.zzq.ganker.ui.DailyDetailViewModel;
 import me.zzq.ganker.ui.DailyViewModel;
 import me.zzq.ganker.viewmodel.GankerViewModelFactory;
 
@@ -23,4 +24,9 @@ public abstract class ViewModelModule {
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(GankerViewModelFactory factory);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DailyDetailViewModel.class)
+    abstract ViewModel bindDailyDetailViewModel(DailyDetailViewModel dailyDetailViewModel);
 }

@@ -2,10 +2,14 @@ package me.zzq.ganker.vo;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
+import android.arch.persistence.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
+
+import me.zzq.ganker.db.ImageListConverter;
 
 /**
  * Created by zzq in 2017/7/18
@@ -23,7 +27,10 @@ public class GanHuo implements Serializable{
 
     private String desc;
 
-    private String publishAt;
+    @TypeConverters(ImageListConverter.class)
+    private List<String> images;
+
+    private String publishedAt;
 
     private String source;
 
@@ -70,12 +77,12 @@ public class GanHuo implements Serializable{
         this.desc = desc;
     }
 
-    public String getPublishAt() {
-        return publishAt;
+    public String getPublishedAt() {
+        return publishedAt;
     }
 
-    public void setPublishAt(String publishAt) {
-        this.publishAt = publishAt;
+    public void setPublishedAt(String publishedAt) {
+        this.publishedAt = publishedAt;
     }
 
     public String getSource() {
@@ -126,13 +133,21 @@ public class GanHuo implements Serializable{
         this.title = title;
     }
 
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
+
     @Override
     public String toString() {
         return "GanHuo{" +
                 "id='" + id + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", desc='" + desc + '\'' +
-                ", publishAt='" + publishAt + '\'' +
+                ", publishAt='" + publishedAt + '\'' +
                 ", source='" + source + '\'' +
                 ", type='" + type + '\'' +
                 ", url='" + url + '\'' +

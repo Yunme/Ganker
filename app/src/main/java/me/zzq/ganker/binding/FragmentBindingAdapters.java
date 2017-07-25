@@ -2,6 +2,7 @@ package me.zzq.ganker.binding;
 
 import android.databinding.BindingAdapter;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +24,11 @@ public class FragmentBindingAdapters {
 
     @BindingAdapter("imageUrl")
     public void bindImage(ImageView imageView, String url) {
-        Glide.with(fragment).load("http://pic129.nipic.com/file/20170511/7138165_193428247000_2.jpg").into(imageView);
+        if (!TextUtils.isEmpty(url)) {
+            Glide.with(fragment)
+                    .load("http://pic129.nipic.com/file/20170511/7138165_193428247000_2.jpg")
+                    .crossFade()
+                    .into(imageView);
+        }
     }
 }

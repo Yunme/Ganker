@@ -24,24 +24,20 @@ import me.zzq.ganker.vo.GanHuo;
 
 public class DailyImageProvider extends ItemBindingProvider<ItemDailyBinding, GanHuo> {
 
-    private final android.databinding.DataBindingComponent dataBindingComponent;
+    private final DataBindingComponent dataBindingComponent;
 
     private final OnItemClickListener<GanHuo> onItemClickListener;
 
     public DailyImageProvider(DataBindingComponent dataBindingComponent, OnItemClickListener<GanHuo> onItemClickListener) {
         this.dataBindingComponent = dataBindingComponent;
         this.onItemClickListener = onItemClickListener;
-
     }
 
 
     @Override
     protected ItemDailyBinding createBinding(ViewGroup parent) {
-
         final ItemDailyBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.item_daily, parent, false, dataBindingComponent);
-
-
         return binding;
     }
 
@@ -53,7 +49,7 @@ public class DailyImageProvider extends ItemBindingProvider<ItemDailyBinding, Ga
             public void onClick(View view) {
                 if (ganHuo != null && onItemClickListener != null) {
                     itemDailyBinding.dailyImageView.setTransitionName("transition" + ganHuo);
-                    onItemClickListener.onItemClick(itemDailyBinding.dailyImageView, 0,  ganHuo);
+                    onItemClickListener.onItemClick(itemDailyBinding.dailyImageView, 0, ganHuo);
                 }
             }
         });

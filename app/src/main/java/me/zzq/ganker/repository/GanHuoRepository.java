@@ -4,7 +4,11 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,6 +20,7 @@ import me.zzq.ganker.db.GanHuoDao;
 import me.zzq.ganker.db.GankerDb;
 import me.zzq.ganker.util.AppExecutors;
 import me.zzq.ganker.vo.GanHuo;
+import me.zzq.ganker.vo.GanHuoList;
 import me.zzq.ganker.vo.Resource;
 
 /**
@@ -77,4 +82,54 @@ public class GanHuoRepository {
         }.asLiveData();
     }
 
+    public LiveData<Resource<List<GanHuo>>> loadGanHuoList(final String date, final String type) {
+        return new NetworkBoundResource<List<GanHuo>, HttpResult<GanHuoList>>(appExecutors) {
+
+            @Override
+            protected void saveCallResult(@NonNull HttpResult<GanHuoList> item) {
+                insertCheckNotNull(ganHuoDao, item.results.getAndroid());
+                insertCheckNotNull(ganHuoDao, item.results.getApp());
+                insertCheckNotNull(ganHuoDao, item.results.getiOS());
+                insertCheckNotNull(ganHuoDao, item.results.get休息视频());
+                insertCheckNotNull(ganHuoDao, item.results.get前端());
+                insertCheckNotNull(ganHuoDao, item.results.get拓展资源());
+                insertCheckNotNull(ganHuoDao, item.results.get瞎推荐());
+                insertCheckNotNull(ganHuoDao, item.results.get福利());
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable List<GanHuo> data) {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<List<GanHuo>> loadFromDb() {
+                return ganHuoDao.loadGanHuoList(date, type);
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<HttpResult<GanHuoList>>> createCall() {
+                SimpleDateFormat simpleDateFormat  = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+                String formatted = "";
+                try {
+                    Date date1 = simpleDateFormat.parse(date);
+                    simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.CHINA);
+                    formatted = simpleDateFormat.format(date1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                return gankerService.getGanHuoList(formatted);
+            }
+        }.asLiveData();
+    }
+
+
+    private void insertCheckNotNull(GanHuoDao dao, List<GanHuo> list) {
+        if (list != null) {
+            dao.insert(list);
+        }
+    }
 }

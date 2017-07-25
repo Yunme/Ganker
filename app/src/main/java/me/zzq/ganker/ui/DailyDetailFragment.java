@@ -1,7 +1,9 @@
 package me.zzq.ganker.ui;
 
 import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -15,14 +17,19 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import me.zzq.ganker.R;
 import me.zzq.ganker.binding.FragmentDataBindingComponent;
-import me.zzq.ganker.databinding.FragmentDailyDetailBinding;
+import me.zzq.ganker.databinding.FragmentDailyDetailOpBinding;
 import me.zzq.ganker.di.Injectable;
+import me.zzq.ganker.ui.adapter.DailyGanHuoProvider;
+import me.zzq.ganker.ui.adapter.DataBoundListAdapter;
 import me.zzq.ganker.util.AutoClearedValue;
 import me.zzq.ganker.vo.GanHuo;
+import me.zzq.ganker.vo.Resource;
 
 /**
  * Created by zzq in 2017/7/21
@@ -30,29 +37,25 @@ import me.zzq.ganker.vo.GanHuo;
 
 public class DailyDetailFragment extends LifecycleFragment implements Injectable {
 
+    public static final String GAN_HUO = "ganHuo";
+    public static final String TRANSITION_NAME = "transition_name";
+
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
     DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
 
-    AutoClearedValue<FragmentDailyDetailBinding> dataBinding;
+    AutoClearedValue<FragmentDailyDetailOpBinding> dataBinding;
 
+    DataBoundListAdapter dataBoundListAdapter;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
+    private DailyDetailViewModel dailyDetailViewModel;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentDailyDetailBinding dailyDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_daily_detail,
+        FragmentDailyDetailOpBinding dailyDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_daily_detail_op,
                 container, false, dataBindingComponent);
-        Bundle bundle = getArguments();
-        String transitionName = bundle.getString("transitionName");
-        dailyDetailBinding.imageView.setTransitionName(transitionName);
-        dailyDetailBinding.setGanHuo((GanHuo) bundle.getSerializable("ganhuo"));
         this.dataBinding = new AutoClearedValue<>(this, dailyDetailBinding);
         return dailyDetailBinding.getRoot();
     }
@@ -61,7 +64,24 @@ public class DailyDetailFragment extends LifecycleFragment implements Injectable
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        ((MainActivity) getActivity()).setSupportActionBar(dataBinding.get().toolBar);
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        dailyDetailViewModel = ViewModelProviders.of(this, viewModelFactory).get(DailyDetailViewModel.class);
+        dataBoundListAdapter = new DataBoundListAdapter();
+        dataBoundListAdapter.viewDataBinding.put(GanHuo.class, new DailyGanHuoProvider(dataBindingComponent));
+        Bundle bundle = getArguments();
+        String transitionName = bundle.getString(TRANSITION_NAME);
+        dataBinding.get().imageView.setTransitionName(transitionName);
+        GanHuo ganHuo = (GanHuo) bundle.getSerializable(GAN_HUO);
+        dataBinding.get().setGanHuo(ganHuo);
+        dataBinding.get().recyclerView.setAdapter(dataBoundListAdapter);
+        dailyDetailViewModel.setDate(ganHuo.getPublishedAt().substring(0, 10), "Android");
+        dailyDetailViewModel.getGanHuoList().observe(this, new Observer<Resource<List<GanHuo>>>() {
+            @Override
+            public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
+                dataBoundListAdapter.setItems(listResource.data);
+            }
+        });
 
         Glide.with(this)
                 .load("http://pic129.nipic.com/file/20170511/7138165_193428247000_2.jpg")
