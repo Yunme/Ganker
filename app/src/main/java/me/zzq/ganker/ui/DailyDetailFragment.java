@@ -26,10 +26,10 @@ import me.zzq.ganker.binding.FragmentDataBindingComponent;
 import me.zzq.ganker.databinding.FragmentDailyDetailOpBinding;
 import me.zzq.ganker.di.Injectable;
 import me.zzq.ganker.ui.adapter.DailyGanHuoProvider;
+import me.zzq.ganker.ui.adapter.DailyTitleProvider;
 import me.zzq.ganker.ui.adapter.DataBoundListAdapter;
 import me.zzq.ganker.util.AutoClearedValue;
 import me.zzq.ganker.vo.GanHuo;
-import me.zzq.ganker.vo.Resource;
 
 /**
  * Created by zzq in 2017/7/21
@@ -69,17 +69,27 @@ public class DailyDetailFragment extends LifecycleFragment implements Injectable
         dailyDetailViewModel = ViewModelProviders.of(this, viewModelFactory).get(DailyDetailViewModel.class);
         dataBoundListAdapter = new DataBoundListAdapter();
         dataBoundListAdapter.viewDataBinding.put(GanHuo.class, new DailyGanHuoProvider(dataBindingComponent));
+        dataBoundListAdapter.viewDataBinding.put(String.class, new DailyTitleProvider());
         Bundle bundle = getArguments();
         String transitionName = bundle.getString(TRANSITION_NAME);
         dataBinding.get().imageView.setTransitionName(transitionName);
         GanHuo ganHuo = (GanHuo) bundle.getSerializable(GAN_HUO);
         dataBinding.get().setGanHuo(ganHuo);
         dataBinding.get().recyclerView.setAdapter(dataBoundListAdapter);
-        dailyDetailViewModel.setDate(ganHuo.getPublishedAt().substring(0, 10), "Android");
-        dailyDetailViewModel.getGanHuoList().observe(this, new Observer<Resource<List<GanHuo>>>() {
+        dailyDetailViewModel.setDate(ganHuo.getPublishedAt().substring(0, 10));
+      /*  dailyDetailViewModel.getGanHuoList().observe(this, new Observer<Resource<List<GanHuo>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
+
                 dataBoundListAdapter.setItems(listResource.data);
+            }
+        });*/
+        dailyDetailViewModel.setLifecycleOwner(this);
+        dailyDetailViewModel.fetchGanHuo("2017-07-25");
+        dailyDetailViewModel.getListMediatorLiveData().observe(this, new Observer<List>() {
+            @Override
+            public void onChanged(@Nullable List list) {
+                dataBoundListAdapter.addItems(list);
             }
         });
 

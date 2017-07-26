@@ -32,4 +32,6 @@ public abstract class GanHuoDao {
     @Query("SELECT * FROM GanHuo WHERE substr(publishedAt, 1, 10) = :date AND type = :type")
     public abstract LiveData<List<GanHuo>> loadGanHuoList(String date, String type);
 
+    @Query("SELECT DISTINCT type FROM GanHuo WHERE substr(publishedAt, 1, 10) = :date AND type != '福利'")
+    public abstract LiveData<List<String>> loadGanHuoDailyType(String date);
 }

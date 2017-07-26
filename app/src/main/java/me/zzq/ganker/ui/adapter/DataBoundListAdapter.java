@@ -12,7 +12,7 @@ import java.util.List;
  * Created by zzq in 2017/7/18
  * <p>
  * A generic RecyclerView Adapter that uses Data Binding & DiffUtil.
- *
+ * <p>
  * Support MultiTpe Item. use one-to-one POJO and ViewDataBinding.
  **/
 
@@ -21,7 +21,7 @@ public class DataBoundListAdapter extends RecyclerView.Adapter<DataBoundViewHold
     public SimpleArrayMap<Class<?>, ItemBindingProvider> viewDataBinding = new SimpleArrayMap<>();
 
     @Nullable
-    private List<?> items;
+    private List items;
     /**
      * each time data is set, we update this variable so that if DiffUtil calculation returns
      * after repetitive updates, we can ignore the old calculation.
@@ -47,7 +47,17 @@ public class DataBoundListAdapter extends RecyclerView.Adapter<DataBoundViewHold
         return viewDataBinding.indexOfKey(items.get(position).getClass());
     }
 
-    public void setItems(@Nullable List<?> items) {
+    @SuppressWarnings("unchecked")
+    public void addItems(@Nullable List itemList) {
+        if (this.items == null) {
+            this.items = itemList;
+        } else if (itemList != null) {
+            this.items.addAll(itemList);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void setItems(@Nullable List items) {
         this.items = items;
         notifyDataSetChanged();
     }
