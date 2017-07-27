@@ -3,6 +3,7 @@ package me.zzq.ganker.repository;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,7 +51,7 @@ public class GanHuoRepository {
     }
 
 
-    public LiveData<Resource<List<GanHuo>>> loadGanHuoHeader() {
+    public LiveData<Resource<List<GanHuo>>> loadGanHuoWelfare() {
         return new NetworkBoundResource<List<GanHuo>, HttpResult<List<GanHuo>>>(appExecutors) {
 
             @Override
@@ -59,25 +60,38 @@ public class GanHuoRepository {
                     int start = ganHuo.getContent().indexOf("src=\"") + 5;
                     int end = ganHuo.getContent().indexOf(".jpg") + 4;
                     ganHuo.setUrl(ganHuo.getContent().substring(start, end));
+                    ganHuo.setPublishedAt(ganHuo.getPublishedAt().substring(0, 10));
                 }
                 ganHuoDao.insert(item.results);
             }
 
             @Override
             protected boolean shouldFetch(@Nullable List<GanHuo> data) {
-                return data == null || data.isEmpty();
+                if (data == null || data.isEmpty()) {
+                    return true;
+                }
+                if (data.size() > 0) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD", Locale.CHINA);
+                    try {
+                        Date date = simpleDateFormat.parse(data.get(0).getPublishedAt());
+                        return !DateUtils.isToday(date.getTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return false;
             }
 
             @NonNull
             @Override
             protected LiveData<List<GanHuo>> loadFromDb() {
-                return ganHuoDao.loadGanHuoList();
+                return ganHuoDao.loadGanHuoWelfareList();
             }
 
             @NonNull
             @Override
             protected LiveData<ApiResponse<HttpResult<List<GanHuo>>>> createCall() {
-                return gankerService.getGanhuoHeader(10, 1);
+                return gankerService.getGanHuoWelfare(10, 1);
             }
         }.asLiveData();
     }
@@ -99,7 +113,7 @@ public class GanHuoRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<GanHuo> data) {
-                return true;
+                return data == null || data.isEmpty();
             }
 
             @NonNull
@@ -111,7 +125,7 @@ public class GanHuoRepository {
             @NonNull
             @Override
             protected LiveData<ApiResponse<HttpResult<GanHuoList>>> createCall() {
-                SimpleDateFormat simpleDateFormat  = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
                 String formatted = "";
                 try {
                     Date date1 = simpleDateFormat.parse(date);
@@ -126,6 +140,10 @@ public class GanHuoRepository {
         }.asLiveData();
     }
 
+
+    public LiveData<List<String>> getTypesOfDailyGanHuo(String date) {
+        return ganHuoDao.loadGanHuoDailyType(date);
+    }
 
     private void insertCheckNotNull(GanHuoDao dao, List<GanHuo> list) {
         if (list != null) {

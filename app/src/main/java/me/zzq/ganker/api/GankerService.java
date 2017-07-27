@@ -18,7 +18,7 @@ import retrofit2.http.Path;
 public interface GankerService {
 
     @GET("history/content/{count}/{page}")
-    LiveData<ApiResponse<HttpResult<List<GanHuo>>>> getGanhuoHeader(@Path("count") int count, @Path("page") int page);
+    LiveData<ApiResponse<HttpResult<List<GanHuo>>>> getGanHuoWelfare(@Path("count") int count, @Path("page") int page);
 
 
     @GET("day/{date}")

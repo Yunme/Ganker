@@ -1,13 +1,13 @@
 package me.zzq.ganker.ui;
 
-import android.arch.lifecycle.LifecycleOwner;
+import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,33 +24,68 @@ import me.zzq.ganker.vo.Resource;
 
 public class DailyDetailViewModel extends ViewModel {
 
+    private final String TAG = this.getClass().getSimpleName();
     private final GanHuoRepository ganHuoRepository;
     private final MutableLiveData<String> dateLiveData = new MutableLiveData<>();
-    private final MediatorLiveData<List> listMediatorLiveData;
+    private final LiveData<List<String>> typeList;
+    private final MediatorLiveData<List> resultListLiveData = new MediatorLiveData<>();
     private MediatorLiveData<Resource<List<GanHuo>>> ganHuoList = new MediatorLiveData<>();
-    private LifecycleOwner lifecycleOwner;
 
     @Inject
     @SuppressWarnings("unchecked")
     public DailyDetailViewModel(final GanHuoRepository ganHuoRepository) {
         this.ganHuoRepository = ganHuoRepository;
 
-        this.listMediatorLiveData = new MediatorLiveData<>();
-        listMediatorLiveData.addSource(ganHuoList, new Observer<Resource<List<GanHuo>>>() {
-            int i = 0;
+        this.typeList = Transformations.switchMap(dateLiveData, new Function<String, LiveData<List<String>>>() {
+            @Override
+            public LiveData<List<String>> apply(String date) {
+                return ganHuoRepository.getTypesOfDailyGanHuo(date);
+            }
+        });
+
+        this.ganHuoList.addSource(typeList, new Observer<List<String>>() {
+            @Override
+            public void onChanged(@Nullable List<String> list) {
+                if (list == null || list.isEmpty()) {
+                    // TODO: 2017/7/27 cannot load detail data when first load.
+                    ganHuoList.addSource(ganHuoRepository.loadGanHuoList(dateLiveData.getValue(), null),
+                            new Observer<Resource<List<GanHuo>>>() {
+                                @Override
+                                public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
+                                    //ganHuoList.removeSource(ganHuoRepository.loadGanHuoList(dateLiveData.getValue(), null));
+                                    //ganHuoList.setValue(listResource);
+                                    if (listResource.status == Resource.Status.SUCCESS &&
+                                            listResource.data != null && listResource.data.size() > 0)
+                                        dateLiveData.setValue("2017-07-27");
+                                }
+                            });
+                    return;
+                }
+                ganHuoList.removeSource(typeList);
+                for (final String type : list) {
+                    ganHuoList.addSource(ganHuoRepository.loadGanHuoList(dateLiveData.getValue(), type),
+                            new Observer<Resource<List<GanHuo>>>() {
+                                @Override
+                                public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
+                                    ganHuoList.removeSource(ganHuoRepository.loadGanHuoList(dateLiveData.getValue(), type));
+                                    ganHuoList.setValue(listResource);
+                                }
+                            });
+                }
+            }
+        });
+
+        this.resultListLiveData.addSource(ganHuoList, new Observer<Resource<List<GanHuo>>>() {
 
             @Override
             public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
-                Log.d("TAG", "onChanged: " + (i++));
                 List resultList = new ArrayList<>();
-                String type = "";
-                if (listResource.data != null && listResource.data.size() > 0) {
-                    type = listResource.data.get(0).getType();
-                }
-                resultList.add(type);
-                if (listResource.status == Resource.Status.SUCCESS) {
+                if (listResource.status == Resource.Status.SUCCESS &&
+                        listResource.data != null && listResource.data.size() > 0) {
+                    String type = listResource.data.get(0).getType();
+                    resultList.add(type);
                     resultList.addAll(listResource.data);
-                    listMediatorLiveData.setValue(resultList);
+                    resultListLiveData.setValue(resultList);
                 }
             }
         });
@@ -60,24 +95,7 @@ public class DailyDetailViewModel extends ViewModel {
         dateLiveData.setValue(date);
     }
 
-    public void fetchGanHuo(final String date) {
-        final LiveData<List<String>> typeList = ganHuoRepository.getTypesOfDailyGanHuo(date);
-        ganHuoList.addSource(typeList, new Observer<List<String>>() {
-            @Override
-            public void onChanged(@Nullable List<String> list) {
-                ganHuoList.removeSource(typeList);
-                for (String type : list) {
-                    ganHuoList.setValue(ganHuoRepository.loadGanHuoList(date, type).getValue());
-                }
-            }
-        });
-    }
-
-    public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
-        this.lifecycleOwner = lifecycleOwner;
-    }
-
-    public MediatorLiveData<List> getListMediatorLiveData() {
-        return listMediatorLiveData;
+    public MediatorLiveData<List> getResultListLiveData() {
+        return resultListLiveData;
     }
 }

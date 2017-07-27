@@ -76,17 +76,8 @@ public class DailyDetailFragment extends LifecycleFragment implements Injectable
         GanHuo ganHuo = (GanHuo) bundle.getSerializable(GAN_HUO);
         dataBinding.get().setGanHuo(ganHuo);
         dataBinding.get().recyclerView.setAdapter(dataBoundListAdapter);
-        dailyDetailViewModel.setDate(ganHuo.getPublishedAt().substring(0, 10));
-      /*  dailyDetailViewModel.getGanHuoList().observe(this, new Observer<Resource<List<GanHuo>>>() {
-            @Override
-            public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
-
-                dataBoundListAdapter.setItems(listResource.data);
-            }
-        });*/
-        dailyDetailViewModel.setLifecycleOwner(this);
-        dailyDetailViewModel.fetchGanHuo("2017-07-25");
-        dailyDetailViewModel.getListMediatorLiveData().observe(this, new Observer<List>() {
+        dailyDetailViewModel.setDate(ganHuo.getPublishedAt());
+        dailyDetailViewModel.getResultListLiveData().observe(this, new Observer<List>() {
             @Override
             public void onChanged(@Nullable List list) {
                 dataBoundListAdapter.addItems(list);

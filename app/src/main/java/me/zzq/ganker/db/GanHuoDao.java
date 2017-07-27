@@ -25,13 +25,12 @@ public abstract class GanHuoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insert(@NonNull List<GanHuo> ganHuoList);
 
-    @Query("SELECT * FROM GanHuo")
-    // load fuli
-    public abstract LiveData<List<GanHuo>> loadGanHuoList();
+    @Query("SELECT * FROM GanHuo WHERE type is NULL ORDER BY publishedAt DESC")
+    public abstract LiveData<List<GanHuo>> loadGanHuoWelfareList();
 
-    @Query("SELECT * FROM GanHuo WHERE substr(publishedAt, 1, 10) = :date AND type = :type")
+    @Query("SELECT * FROM GanHuo WHERE publishedAt = :date AND type = :type")
     public abstract LiveData<List<GanHuo>> loadGanHuoList(String date, String type);
 
-    @Query("SELECT DISTINCT type FROM GanHuo WHERE substr(publishedAt, 1, 10) = :date AND type != '福利'")
+    @Query("SELECT DISTINCT type FROM GanHuo WHERE publishedAt = :date AND type != '福利'")
     public abstract LiveData<List<String>> loadGanHuoDailyType(String date);
 }

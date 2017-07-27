@@ -22,7 +22,7 @@ public class DailyViewModel extends ViewModel {
     @Inject
     public DailyViewModel(GanHuoRepository ganHuoRepository) {
 
-        ganHuoList = ganHuoRepository.loadGanHuoHeader();
+        ganHuoList = ganHuoRepository.loadGanHuoWelfare();
     }
 
     public LiveData<Resource<List<GanHuo>>> getGanHuoList() {

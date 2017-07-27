@@ -111,17 +111,20 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
         return response.body;
     }
 
-    //data persistence
+    // data persistence
     @WorkerThread
     protected abstract void saveCallResult(@NonNull RequestType item);
 
+    // determine send a network request or not according database query result.
     @MainThread
     protected abstract boolean shouldFetch(@Nullable ResultType data);
 
+    // load data from stored database
     @NonNull
     @MainThread
     protected abstract LiveData<ResultType> loadFromDb();
 
+    // if {@code shouldFetch} return {@code true} then fetch from network.
     @NonNull
     @MainThread
     protected abstract LiveData<ApiResponse<RequestType>> createCall();

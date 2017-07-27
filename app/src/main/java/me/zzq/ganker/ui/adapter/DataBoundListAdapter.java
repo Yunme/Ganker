@@ -51,10 +51,11 @@ public class DataBoundListAdapter extends RecyclerView.Adapter<DataBoundViewHold
     public void addItems(@Nullable List itemList) {
         if (this.items == null) {
             this.items = itemList;
+            notifyDataSetChanged();
         } else if (itemList != null) {
             this.items.addAll(itemList);
+            notifyItemRangeInserted(items.size() - itemList.size() , itemList.size());
         }
-        notifyDataSetChanged();
     }
 
     public void setItems(@Nullable List items) {

@@ -1,5 +1,7 @@
 package me.zzq.ganker.api;
 
+import java.util.List;
+
 /**
  * Created by zzq in 2017/7/19
  * <p>
@@ -11,5 +13,7 @@ public class HttpResult<T> {
     public boolean error;
 
     public T results;
+
+    public List<String> category;
 
 }
