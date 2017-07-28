@@ -26,6 +26,7 @@
                 android:layout_height="match_parent"
                 app:collapsedTitleGravity="center"
                 app:contentScrim="@color/colorPrimary"
+                app:expandedTitleTextAppearance="@style/DailyCollapsingToolbarTitleLight"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <ImageView
@@ -41,6 +42,7 @@
                     android:id="@+id/toolBar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
+                    app:title="@{ganHuo.getTitle()}"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
