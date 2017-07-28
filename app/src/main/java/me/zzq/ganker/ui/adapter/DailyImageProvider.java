@@ -65,8 +65,10 @@ public class DailyImageProvider extends ItemBindingProvider<ItemDailyBinding, Ga
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         Palette.Swatch swatch = getImagePaletteSwatch(((GlideBitmapDrawable) resource).getBitmap());
                         if (swatch != null) {
-                            itemDailyBinding.textView.setBackgroundColor(swatch.getRgb());
-                            itemDailyBinding.textView.setTextColor(swatch.getTitleTextColor());
+                            itemDailyBinding.textTitle.setTextColor(swatch.getTitleTextColor());
+                            itemDailyBinding.textDesc.setBackgroundColor(swatch.getRgb());
+                            itemDailyBinding.textDesc.setTextColor(swatch.getTitleTextColor());
+                            itemDailyBinding.getRoot().setBackgroundColor(swatch.getRgb());
                         }
                         return false;
                     }
