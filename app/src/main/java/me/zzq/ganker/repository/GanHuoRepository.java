@@ -147,6 +147,9 @@ public class GanHuoRepository {
 
     private void insertCheckNotNull(GanHuoDao dao, List<GanHuo> list) {
         if (list != null) {
+            for (GanHuo ganHuo : list) {
+                ganHuo.setPublishedAt(ganHuo.getPublishedAt().substring(0, 10));
+            }
             dao.insert(list);
         }
     }

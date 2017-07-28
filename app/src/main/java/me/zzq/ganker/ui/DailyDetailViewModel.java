@@ -8,8 +8,10 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,30 +41,33 @@ public class DailyDetailViewModel extends ViewModel {
         this.typeList = Transformations.switchMap(dateLiveData, new Function<String, LiveData<List<String>>>() {
             @Override
             public LiveData<List<String>> apply(String date) {
+                Log.d(TAG, "apply: typeList ");
                 return ganHuoRepository.getTypesOfDailyGanHuo(date);
             }
         });
 
+
         this.ganHuoList.addSource(typeList, new Observer<List<String>>() {
             @Override
             public void onChanged(@Nullable List<String> list) {
+                Log.d(TAG, "onChanged: " + Arrays.toString(list.toArray()));
                 if (list == null || list.isEmpty()) {
-                    // TODO: 2017/7/27 cannot load detail data when first load.
-                    ganHuoList.addSource(ganHuoRepository.loadGanHuoList(dateLiveData.getValue(), null),
-                            new Observer<Resource<List<GanHuo>>>() {
-                                @Override
-                                public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
-                                    //ganHuoList.removeSource(ganHuoRepository.loadGanHuoList(dateLiveData.getValue(), null));
-                                    //ganHuoList.setValue(listResource);
-                                    if (listResource.status == Resource.Status.SUCCESS &&
-                                            listResource.data != null && listResource.data.size() > 0)
-                                        dateLiveData.setValue("2017-07-27");
-                                }
-                            });
+                    final LiveData<Resource<List<GanHuo>>> tempGanHuos = ganHuoRepository.loadGanHuoList(dateLiveData.getValue(), null);
+                    ganHuoList.addSource(tempGanHuos, new Observer<Resource<List<GanHuo>>>() {
+                        @Override
+                        public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
+                            //ganHuoList.setValue(listResource);
+                            if (listResource.status == Resource.Status.SUCCESS) {
+                                ganHuoList.removeSource(tempGanHuos);
+                                dateLiveData.setValue(dateLiveData.getValue());
+                            }
+                        }
+                    });
                     return;
                 }
                 ganHuoList.removeSource(typeList);
                 for (final String type : list) {
+                    final LiveData<Resource<List<GanHuo>>> tempGanHuos = ganHuoRepository.loadGanHuoList(dateLiveData.getValue(), type);
                     ganHuoList.addSource(ganHuoRepository.loadGanHuoList(dateLiveData.getValue(), type),
                             new Observer<Resource<List<GanHuo>>>() {
                                 @Override
@@ -92,6 +97,7 @@ public class DailyDetailViewModel extends ViewModel {
     }
 
     public void setDate(String date) {
+        Log.d(TAG, "setDate: " + date);
         dateLiveData.setValue(date);
     }
 
