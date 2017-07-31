@@ -9,14 +9,18 @@
         <variable
             name="ganHuo"
             type="me.zzq.ganker.vo.GanHuo" />
+
+        <variable
+            name="isToday"
+            type="boolean" />
     </data>
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardUseCompatPadding="true"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        app:cardUseCompatPadding="true">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -40,15 +44,15 @@
                 android:id="@+id/textDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@{ganHuo.getTitle()}"
-                tools:text="@string/ganhuo_image"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@{isToday ? `今日力推：` + ganHuo.getTitle() : ganHuo.getTitle()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline2"
-                android:layout_marginTop="8dp" />
+                tools:text="@string/ganhuo_image" />
 
             <TextView
                 android:id="@+id/textTitle"

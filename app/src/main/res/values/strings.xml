@@ -2,4 +2,5 @@
     <string name="app_name">Ganker</string>
 
     <string name="ganhuo_image">GanHuo image</string>
+    <string name="image_description">image_description</string>
 </resources>

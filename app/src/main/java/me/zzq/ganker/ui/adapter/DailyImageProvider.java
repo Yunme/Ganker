@@ -4,6 +4,7 @@ import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.support.v7.graphics.Palette;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,11 @@ import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import me.zzq.ganker.R;
 import me.zzq.ganker.databinding.ItemDailyBinding;
@@ -44,6 +50,14 @@ public class DailyImageProvider extends ItemBindingProvider<ItemDailyBinding, Ga
     @Override
     protected void onBind(final ItemDailyBinding itemDailyBinding, final GanHuo ganHuo, final int position) {
         itemDailyBinding.setGanHuo(ganHuo);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD", Locale.CHINA);
+        try {
+            Date date = simpleDateFormat.parse(ganHuo.getPublishedAt());
+            itemDailyBinding.setIsToday(DateUtils.isToday(date.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         itemDailyBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -61,6 +61,9 @@ public class GanHuoRepository {
                     int end = ganHuo.getContent().indexOf(".jpg") + 4;
                     ganHuo.setUrl(ganHuo.getContent().substring(start, end));
                     ganHuo.setPublishedAt(ganHuo.getPublishedAt().substring(0, 10));
+                    if (ganHuo.getTitle().startsWith("今日力推：")) {
+                        ganHuo.setTitle(ganHuo.getTitle().substring(5));
+                    }
                 }
                 ganHuoDao.insert(item.results);
             }
