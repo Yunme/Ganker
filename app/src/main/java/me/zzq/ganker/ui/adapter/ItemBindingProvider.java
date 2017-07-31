@@ -17,7 +17,7 @@ public abstract class ItemBindingProvider<DataBinding extends ViewDataBinding, D
     protected abstract DataBinding createBinding(ViewGroup parent);
 
 
-    protected abstract void onBind(DataBinding binding, Data item);
+    protected abstract void onBind(DataBinding binding, Data item, int position);
 
 
 }

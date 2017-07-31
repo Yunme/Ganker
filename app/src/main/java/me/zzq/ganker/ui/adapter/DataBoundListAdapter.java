@@ -38,7 +38,7 @@ public class DataBoundListAdapter extends RecyclerView.Adapter<DataBoundViewHold
     @Override
     public void onBindViewHolder(DataBoundViewHolder holder, int position) {
         ItemBindingProvider viewBinding = viewDataBinding.valueAt(getItemViewType(position));
-        viewBinding.onBind(holder.binding, items.get(position));
+        viewBinding.onBind(holder.binding, items.get(position), position);
         holder.binding.executePendingBindings();
     }
 

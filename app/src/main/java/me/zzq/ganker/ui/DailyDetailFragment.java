@@ -92,7 +92,7 @@ public class DailyDetailFragment extends LifecycleFragment implements Injectable
         });
 
         Glide.with(this)
-                .load("http://pic129.nipic.com/file/20170511/7138165_193428247000_2.jpg")
+                .load(ganHuo.getUrl())
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {

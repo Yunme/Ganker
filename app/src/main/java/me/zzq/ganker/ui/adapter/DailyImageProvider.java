@@ -42,19 +42,19 @@ public class DailyImageProvider extends ItemBindingProvider<ItemDailyBinding, Ga
     }
 
     @Override
-    protected void onBind(final ItemDailyBinding itemDailyBinding, final GanHuo ganHuo) {
+    protected void onBind(final ItemDailyBinding itemDailyBinding, final GanHuo ganHuo, final int position) {
         itemDailyBinding.setGanHuo(ganHuo);
         itemDailyBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (ganHuo != null && onItemClickListener != null) {
                     itemDailyBinding.dailyImageView.setTransitionName("transition" + ganHuo);
-                    onItemClickListener.onItemClick(itemDailyBinding.dailyImageView, 0, ganHuo);
+                    onItemClickListener.onItemClick(itemDailyBinding.dailyImageView, position, ganHuo);
                 }
             }
         });
         Glide.with(itemDailyBinding.getRoot().getContext())
-                .load("http://pic129.nipic.com/file/20170511/7138165_193428247000_2.jpg")
+                .load(ganHuo.getUrl())
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -68,7 +68,7 @@ public class DailyImageProvider extends ItemBindingProvider<ItemDailyBinding, Ga
                             itemDailyBinding.textTitle.setTextColor(swatch.getTitleTextColor());
                             itemDailyBinding.textDesc.setBackgroundColor(swatch.getRgb());
                             itemDailyBinding.textDesc.setTextColor(swatch.getTitleTextColor());
-                            itemDailyBinding.getRoot().setBackgroundColor(swatch.getRgb());
+                            itemDailyBinding.cardView.setCardBackgroundColor(swatch.getRgb());
                         }
                         return false;
                     }

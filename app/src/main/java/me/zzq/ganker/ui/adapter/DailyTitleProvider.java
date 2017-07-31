@@ -20,7 +20,7 @@ public class DailyTitleProvider extends ItemBindingProvider<ItemDailyTitleBindin
     }
 
     @Override
-    protected void onBind(ItemDailyTitleBinding binding, String item) {
+    protected void onBind(ItemDailyTitleBinding binding, String item, int position) {
         binding.setTitle(item);
     }
 }

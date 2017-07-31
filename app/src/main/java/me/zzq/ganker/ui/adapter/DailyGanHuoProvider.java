@@ -30,7 +30,7 @@ public class DailyGanHuoProvider extends ItemBindingProvider<ItemDailyGanhuoBind
     }
 
     @Override
-    protected void onBind(ItemDailyGanhuoBinding binding, GanHuo item) {
+    protected void onBind(ItemDailyGanhuoBinding binding, GanHuo item, int position) {
         binding.setGanHuo(item);
     }
 
