@@ -26,7 +26,7 @@ public class FragmentBindingAdapters {
     public void bindImage(ImageView imageView, String url) {
         if (!TextUtils.isEmpty(url)) {
             Glide.with(fragment)
-                    .load("http://pic129.nipic.com/file/20170511/7138165_193428247000_2.jpg")
+                    .load(url)
                     .crossFade()
                     .into(imageView);
         }
