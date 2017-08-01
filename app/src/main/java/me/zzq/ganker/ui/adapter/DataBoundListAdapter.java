@@ -5,6 +5,7 @@ import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -55,6 +56,18 @@ public class DataBoundListAdapter extends RecyclerView.Adapter<DataBoundViewHold
         } else if (itemList != null) {
             this.items.addAll(itemList);
             notifyItemRangeInserted(items.size() - itemList.size() , itemList.size());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addItem(@Nullable Object object) {
+        if (items == null) {
+            this.items = new ArrayList();
+            this.items.add(object);
+            notifyDataSetChanged();
+        } else {
+            this.items.add(object);
+            notifyItemInserted(items.size());
         }
     }
 

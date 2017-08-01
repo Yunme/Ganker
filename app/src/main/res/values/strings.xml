@@ -3,4 +3,7 @@
 
     <string name="ganhuo_image">GanHuo image</string>
     <string name="image_description">image_description</string>
+    <string name="loading">正在加载&#8230;</string>
+    <string name="load_error">加载失败，点击重试</string>
+    <string name="load_no_more">没有更多数据</string>
 </resources>

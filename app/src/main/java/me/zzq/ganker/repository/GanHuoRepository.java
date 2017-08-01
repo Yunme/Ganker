@@ -51,7 +51,7 @@ public class GanHuoRepository {
     }
 
 
-    public LiveData<Resource<List<GanHuo>>> loadGanHuoWelfare() {
+    public LiveData<Resource<List<GanHuo>>> loadGanHuoWelfare(final int page) {
         return new NetworkBoundResource<List<GanHuo>, HttpResult<List<GanHuo>>>(appExecutors) {
 
             @Override
@@ -88,13 +88,13 @@ public class GanHuoRepository {
             @NonNull
             @Override
             protected LiveData<List<GanHuo>> loadFromDb() {
-                return ganHuoDao.loadGanHuoWelfareList();
+                return ganHuoDao.loadGanHuoWelfareList(page);
             }
 
             @NonNull
             @Override
             protected LiveData<ApiResponse<HttpResult<List<GanHuo>>>> createCall() {
-                return gankerService.getGanHuoWelfare(10, 1);
+                return gankerService.getGanHuoWelfare(10, page);
             }
         }.asLiveData();
     }

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,13 +98,30 @@ public class DailyFragment extends LifecycleFragment implements Injectable {
         dataBinding.get().recyclerView.setAdapter(dataBoundListAdapter);
         new LinearSnapHelper().attachToRecyclerView(dataBinding.get().recyclerView);
         ((LinearLayoutManager) dataBinding.get().recyclerView.getLayoutManager()).setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        dataBinding.get().recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (layoutManager instanceof LinearLayoutManager) {
+                    int lastPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+                    if (lastPosition == dataBoundListAdapter.getItemCount() - 1 && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        dailyViewModel.loadNextPage();
+                    }
+                }
+            }
+        });
+
         dailyViewModel.getGanHuoList().observe(this, new Observer<Resource<List<GanHuo>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<GanHuo>> listResource) {
                 if (listResource == null) {
                     dataBoundListAdapter.setItems(null);
                 } else {
-                    dataBoundListAdapter.setItems(listResource.data);
+                    dataBinding.get().setLoadingMore(listResource.status != Resource.Status.SUCCESS);
+                    if (listResource.status == Resource.Status.SUCCESS)
+                        dataBoundListAdapter.addItems(listResource.data);
                 }
             }
         });

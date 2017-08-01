@@ -25,8 +25,8 @@ public abstract class GanHuoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insert(@NonNull List<GanHuo> ganHuoList);
 
-    @Query("SELECT * FROM GanHuo WHERE type is NULL ORDER BY publishedAt DESC")
-    public abstract LiveData<List<GanHuo>> loadGanHuoWelfareList();
+    @Query("SELECT * FROM GanHuo WHERE type is NULL ORDER BY publishedAt DESC LIMIT 10 OFFSET (:page - 1) * 10")
+    public abstract LiveData<List<GanHuo>> loadGanHuoWelfareList(int page);
 
     @Query("SELECT * FROM GanHuo WHERE publishedAt = :date AND type = :type")
     public abstract LiveData<List<GanHuo>> loadGanHuoList(String date, String type);
