@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha7'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha9'
         
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -17,10 +17,12 @@ buildscript {
 
 
 ext.support_version = "26.0.0-beta1"
+ext.constraint_layout_version = "1.0.2"
 ext.arch_version = "1.0.0-alpha4"
 ext.retrofit_version = "2.3.0"
 ext.glide_version = "3.7.0"
 ext.dagger_version = "2.11"
+ext.leakcanary_version = "1.5.1"
 
 allprojects {
     repositories {

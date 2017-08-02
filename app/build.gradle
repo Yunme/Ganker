@@ -57,8 +57,9 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    debugCompile 'com.amitshekhar.android:debug-db:1.0.1'
-    implementation "io.reactivex.rxjava2:rxjava:2.1.2"
-    implementation "android.arch.persistence.room:rxjava2:$arch_version"
+    implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"
 }
