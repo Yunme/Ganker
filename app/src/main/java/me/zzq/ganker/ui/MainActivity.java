@@ -44,4 +44,13 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     public AndroidInjector<Fragment> supportFragmentInjector() {
         return dispatchingAndroidInjector;
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if (count == 0){
+            finish();
+        }
+    }
 }
