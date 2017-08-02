@@ -3,6 +3,7 @@ package me.zzq.ganker.ui.adapter;
 import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import me.zzq.ganker.R;
@@ -17,8 +18,11 @@ public class DailyGanHuoProvider extends ItemBindingProvider<ItemDailyGanhuoBind
 
     private final DataBindingComponent dataBindingComponent;
 
-    public DailyGanHuoProvider(DataBindingComponent dataBindingComponent) {
+    private OnItemClickListener<GanHuo> onItemClickListener;
+
+    public DailyGanHuoProvider(DataBindingComponent dataBindingComponent, OnItemClickListener<GanHuo> onItemClickListener) {
         this.dataBindingComponent = dataBindingComponent;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -30,8 +34,16 @@ public class DailyGanHuoProvider extends ItemBindingProvider<ItemDailyGanhuoBind
     }
 
     @Override
-    protected void onBind(ItemDailyGanhuoBinding binding, GanHuo item, int position) {
+    protected void onBind(ItemDailyGanhuoBinding binding, final GanHuo item, final int position) {
         binding.setGanHuo(item);
+        binding.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(view, position, item);
+                }
+            }
+        });
     }
 
 }

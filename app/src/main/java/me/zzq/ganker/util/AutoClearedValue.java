@@ -1,7 +1,9 @@
 package me.zzq.ganker.util;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleRegistryOwner;
+import android.arch.lifecycle.OnLifecycleEvent;
 
 /**
  * Created by zzq in 2017/7/18
@@ -15,16 +17,14 @@ public class AutoClearedValue<T> {
 
     private T value;
 
-    public AutoClearedValue(final Fragment fragment, T value) {
-        final FragmentManager fragmentManager = fragment.getFragmentManager();
-        fragmentManager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
-            @Override
-            public void onFragmentDestroyed(FragmentManager fm, Fragment f) {
+    public AutoClearedValue(final LifecycleRegistryOwner lifecycleRegistryOwner, T value) {
+        lifecycleRegistryOwner.getLifecycle().addObserver(new LifecycleObserver() {
+            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            public void onDestroy() {
                 AutoClearedValue.this.value = null;
-                fragmentManager.unregisterFragmentLifecycleCallbacks(this);
+                lifecycleRegistryOwner.getLifecycle().removeObserver(this);
             }
-        }, false);
-
+        });
         this.value = value;
     }
 

@@ -50,7 +50,7 @@ public class DailyImageProvider extends ItemBindingProvider<ItemDailyBinding, Ga
     @Override
     protected void onBind(final ItemDailyBinding itemDailyBinding, final GanHuo ganHuo, final int position) {
         itemDailyBinding.setGanHuo(ganHuo);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD", Locale.CHINA);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         try {
             Date date = simpleDateFormat.parse(ganHuo.getPublishedAt());
             itemDailyBinding.setIsToday(DateUtils.isToday(date.getTime()));

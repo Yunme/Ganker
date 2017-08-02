@@ -4,6 +4,7 @@ import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingComponent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -23,11 +24,12 @@ import javax.inject.Inject;
 
 import me.zzq.ganker.R;
 import me.zzq.ganker.binding.FragmentDataBindingComponent;
-import me.zzq.ganker.databinding.FragmentDailyDetailOpBinding;
+import me.zzq.ganker.databinding.FragmentDailyDetailBinding;
 import me.zzq.ganker.di.Injectable;
 import me.zzq.ganker.ui.adapter.DailyGanHuoProvider;
 import me.zzq.ganker.ui.adapter.DailyTitleProvider;
 import me.zzq.ganker.ui.adapter.DataBoundListAdapter;
+import me.zzq.ganker.ui.adapter.OnItemClickListener;
 import me.zzq.ganker.util.AutoClearedValue;
 import me.zzq.ganker.vo.GanHuo;
 
@@ -45,7 +47,7 @@ public class DailyDetailFragment extends LifecycleFragment implements Injectable
 
     DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
 
-    AutoClearedValue<FragmentDailyDetailOpBinding> dataBinding;
+    AutoClearedValue<FragmentDailyDetailBinding> dataBinding;
 
     DataBoundListAdapter dataBoundListAdapter;
 
@@ -54,7 +56,7 @@ public class DailyDetailFragment extends LifecycleFragment implements Injectable
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentDailyDetailOpBinding dailyDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_daily_detail_op,
+        FragmentDailyDetailBinding dailyDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_daily_detail,
                 container, false, dataBindingComponent);
         this.dataBinding = new AutoClearedValue<>(this, dailyDetailBinding);
         return dailyDetailBinding.getRoot();
@@ -68,7 +70,7 @@ public class DailyDetailFragment extends LifecycleFragment implements Injectable
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         dailyDetailViewModel = ViewModelProviders.of(this, viewModelFactory).get(DailyDetailViewModel.class);
         dataBoundListAdapter = new DataBoundListAdapter();
-        dataBoundListAdapter.viewDataBinding.put(GanHuo.class, new DailyGanHuoProvider(dataBindingComponent));
+        dataBoundListAdapter.viewDataBinding.put(GanHuo.class, new DailyGanHuoProvider(dataBindingComponent, onItemClickListener));
         dataBoundListAdapter.viewDataBinding.put(String.class, new DailyTitleProvider());
         Bundle bundle = getArguments();
         String transitionName = bundle.getString(TRANSITION_NAME);
@@ -107,4 +109,14 @@ public class DailyDetailFragment extends LifecycleFragment implements Injectable
                 })
                 .into(dataBinding.get().imageView);
     }
+
+    private OnItemClickListener<GanHuo> onItemClickListener = new OnItemClickListener<GanHuo>() {
+        @Override
+        public void onItemClick(View view, int position, GanHuo item) {
+            Intent intent = new Intent(view.getContext(), WebViewActivity.class);
+            intent.putExtra(WebViewActivity.WEB_URL, item.getUrl());
+            intent.putExtra(WebViewActivity.GAN_HUO, item);
+            startActivity(intent);
+        }
+    };
 }

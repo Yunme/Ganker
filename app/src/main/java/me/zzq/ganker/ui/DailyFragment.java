@@ -56,7 +56,7 @@ public class DailyFragment extends LifecycleFragment implements Injectable {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentDailyBinding dailyBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_daily, container,
                 false, dataBindingComponent);
-        this.dataBinding = new AutoClearedValue<>(this, dailyBinding);
+        this.dataBinding = new AutoClearedValue<>( this, dailyBinding);
         return dailyBinding.getRoot();
     }
 
