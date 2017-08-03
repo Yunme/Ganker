@@ -2,71 +2,83 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d5090042b135fa4584a1d414518a52b7",
+    "identityHash": "579757e4215839575a2ad4004c9b923d",
     "entities": [
       {
         "tableName": "GanHuo",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT, `content` TEXT, `createdAt` TEXT, `desc` TEXT, `images` TEXT, `publishedAt` TEXT, `source` TEXT, `type` TEXT, `url` TEXT, `used` INTEGER, `who` TEXT, `title` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT, `content` TEXT, `createdAt` TEXT, `desc` TEXT, `images` TEXT, `publishedAt` TEXT, `source` TEXT, `type` TEXT, `url` TEXT, `used` INTEGER NOT NULL, `who` TEXT, `title` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "content",
             "columnName": "content",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "createdAt",
             "columnName": "createdAt",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "desc",
             "columnName": "desc",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "images",
             "columnName": "images",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "publishedAt",
             "columnName": "publishedAt",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "source",
             "columnName": "source",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "type",
             "columnName": "type",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "url",
             "columnName": "url",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "used",
             "columnName": "used",
-            "affinity": "INTEGER"
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "who",
             "columnName": "who",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "title",
             "columnName": "title",
-            "affinity": "TEXT"
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -90,7 +102,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d5090042b135fa4584a1d414518a52b7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"579757e4215839575a2ad4004c9b923d\")"
     ]
   }
 }
