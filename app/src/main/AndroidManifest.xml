@@ -21,6 +21,7 @@
         </activity>
 
         <activity android:name=".ui.WebViewActivity" />
+        <activity android:name=".ui.AboutPageActivity" />
     </application>
 
 </manifest>

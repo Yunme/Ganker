@@ -58,6 +58,8 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+    implementation 'me.drakeet.support:about:1.2.1'
+    implementation 'me.drakeet.multitype:multitype:3.1.0'
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanary_version"

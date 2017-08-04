@@ -2,10 +2,13 @@ package me.zzq.ganker.ui;
 
 import android.arch.lifecycle.LifecycleRegistry;
 import android.arch.lifecycle.LifecycleRegistryOwner;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import javax.inject.Inject;
 
@@ -36,6 +39,23 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.item_about_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_info:
+                Intent intent = new Intent(this, AboutPageActivity.class);
+                startActivity(intent);
+                break;
+        }
+        return true;
+    }
+
+    @Override
     public LifecycleRegistry getLifecycle() {
         return lifecycleRegistry;
     }
@@ -49,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleRegistry
     public void onBackPressed() {
         super.onBackPressed();
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        if (count == 0){
+        if (count == 0) {
             finish();
         }
     }
