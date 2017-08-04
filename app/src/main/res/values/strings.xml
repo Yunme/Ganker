@@ -6,4 +6,6 @@
     <string name="loading">正在加载&#8230;</string>
     <string name="load_error">加载失败，点击重试</string>
     <string name="load_no_more">没有更多数据</string>
+    <string name="openInBrowser">openInBrowser</string>
+    <string name="about">About</string>
 </resources>
